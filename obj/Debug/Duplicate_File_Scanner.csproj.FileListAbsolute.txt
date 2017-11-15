@@ -1,0 +1,15 @@
+C:\Users\Radoslav\Documents\Visual Studio 2017\Projects\Duplicate_File_Scanner\Duplicate_File_Scanner\bin\Debug\Duplicate_File_Scanner.exe.config
+C:\Users\Radoslav\Documents\Visual Studio 2017\Projects\Duplicate_File_Scanner\Duplicate_File_Scanner\bin\Debug\Duplicate_File_Scanner.exe
+C:\Users\Radoslav\Documents\Visual Studio 2017\Projects\Duplicate_File_Scanner\Duplicate_File_Scanner\bin\Debug\Duplicate_File_Scanner.pdb
+C:\Users\Radoslav\Documents\Visual Studio 2017\Projects\Duplicate_File_Scanner\Duplicate_File_Scanner\obj\Debug\Duplicate_File_Scanner.csprojResolveAssemblyReference.cache
+C:\Users\Radoslav\Documents\Visual Studio 2017\Projects\Duplicate_File_Scanner\Duplicate_File_Scanner\obj\Debug\MainWindow.g.cs
+C:\Users\Radoslav\Documents\Visual Studio 2017\Projects\Duplicate_File_Scanner\Duplicate_File_Scanner\obj\Debug\App.g.cs
+C:\Users\Radoslav\Documents\Visual Studio 2017\Projects\Duplicate_File_Scanner\Duplicate_File_Scanner\obj\Debug\Duplicate_File_Scanner_MarkupCompile.cache
+C:\Users\Radoslav\Documents\Visual Studio 2017\Projects\Duplicate_File_Scanner\Duplicate_File_Scanner\obj\Debug\Duplicate_File_Scanner_MarkupCompile.lref
+C:\Users\Radoslav\Documents\Visual Studio 2017\Projects\Duplicate_File_Scanner\Duplicate_File_Scanner\obj\Debug\MainWindow.baml
+C:\Users\Radoslav\Documents\Visual Studio 2017\Projects\Duplicate_File_Scanner\Duplicate_File_Scanner\obj\Debug\Duplicate_File_Scanner.g.resources
+C:\Users\Radoslav\Documents\Visual Studio 2017\Projects\Duplicate_File_Scanner\Duplicate_File_Scanner\obj\Debug\Duplicate_File_Scanner.Properties.Resources.resources
+C:\Users\Radoslav\Documents\Visual Studio 2017\Projects\Duplicate_File_Scanner\Duplicate_File_Scanner\obj\Debug\Duplicate_File_Scanner.csproj.GenerateResource.Cache
+C:\Users\Radoslav\Documents\Visual Studio 2017\Projects\Duplicate_File_Scanner\Duplicate_File_Scanner\obj\Debug\Duplicate_File_Scanner.csproj.CoreCompileInputs.cache
+C:\Users\Radoslav\Documents\Visual Studio 2017\Projects\Duplicate_File_Scanner\Duplicate_File_Scanner\obj\Debug\Duplicate_File_Scanner.exe
+C:\Users\Radoslav\Documents\Visual Studio 2017\Projects\Duplicate_File_Scanner\Duplicate_File_Scanner\obj\Debug\Duplicate_File_Scanner.pdb
