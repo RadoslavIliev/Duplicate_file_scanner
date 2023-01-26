@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Duplicate_File_Scanner
 {
-    class File 
+    public class File 
     {
         // contains file path
        string path;
@@ -56,33 +56,28 @@ namespace Duplicate_File_Scanner
         }
 
         // Compare two files 
-        public static bool CompareFiles(File file1,File file2)
+        public static bool CompareFiles(string file1, string file2)
         {
-            bool equal = false;
-            // if size is equal and have different names
-            if ((file1.FileSize == file2.FileSize) && (file1.Path != file2.Path))
+            // Open the two files
+            using (var stream1 = System.IO.File.OpenRead(file1))
+            using (var stream2 = System.IO.File.OpenRead(file2))
             {
-                // open both files
-                using (FileStream f1 = System.IO.File.OpenRead(file1.Path))
-                using (FileStream f2 = System.IO.File.OpenRead(file2.Path))
+                // Compare the two files byte by byte
+                if (stream1.Length != stream2.Length)
                 {
-                    equal = true;
-                    // read byte by byte
-                    for (int i = 0; i < file1.FileSize; i++)
-                    { 
-                        // if 2 bytes are different 
-                        if (f1.ReadByte() != f2.ReadByte())
-                        { 
-                            equal = false;
-                            break;
-                        }
-                    }
+                    return false;
                 }
 
-        
+                for (int i = 0; i < stream1.Length; i++)
+                {
+                    if (stream1.ReadByte() != stream2.ReadByte())
+                    {
+                        return false;
+                    }
+                }
             }
 
-            return equal;
+            return true;
         }
 
         // return file path without main dirrectory
@@ -90,5 +85,7 @@ namespace Duplicate_File_Scanner
         {
             return Path.Remove(0,mainDirectory.Length + 1);
         }
+
+        public int DuplicateFileGroup { get; set; }
     }
 }

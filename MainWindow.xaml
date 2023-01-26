@@ -6,23 +6,47 @@
         xmlns:local="clr-namespace:Duplicate_File_Scanner"
         mc:Ignorable="d"
         Title="Duplicate file scanner" Height="350" Width="525">
+
     <Grid>
+
         <Button Content="Directory" Name="btnDirectory" HorizontalAlignment="Left" Height="23" Margin="10,10,0,0" VerticalAlignment="Top" Width="55" RenderTransformOrigin="-0.032,-1.397" Click="btnDirectory_Click"/>
         <TextBox HorizontalAlignment="Left" Name="txbDirectory" Height="23" Margin="70,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="262"/>
         <Button Content="Scan" Name="btnScan" HorizontalAlignment="Left" Height="23" Margin="344,10,0,0" VerticalAlignment="Top" Width="65" Click="btnScan_Click" IsEnabled="False"/>
         <Grid Margin="10">
-            <ListBox Margin="10,63,10,0" Name="lsbFiles" SelectionMode="Multiple">
+            <!--<ListBox  Margin="10,63,10,0" HorizontalContentAlignment="Stretch" SelectionMode="Multiple" x:Name="DuplicateListView" >
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock  Text="{Binding}" />
-
+                        <StackPanel>
+                            <Label Content="{Binding Key}"/>
+                            <ListView x:Name="FileListView"  SelectionMode="Multiple" ItemsSource="{Binding Value}"/>
                         </StackPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
+            </ListBox>-->
+            <ListView  Margin="10,63,10,0" HorizontalContentAlignment="Stretch" x:Name="DuplicateListView" SelectionMode="Multiple">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding GroupKey}" Value="0">
+                                <Setter Property="Background" Value="LightGray"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding GroupKey}" Value="1">
+                                <Setter Property="Background" Value="White"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ListView.ItemContainerStyle>
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Key" DisplayMemberBinding="{Binding GroupKey}" />
+                        <GridViewColumn Header="Path" DisplayMemberBinding="{Binding FilePath}" />
+                    </GridView>
+                </ListView.View>
+            </ListView>
 
-            </ListBox>
         </Grid>
+
         <Button Content="Delete" Name="btnDelete" HorizontalAlignment="Left" Height="23" Margin="425,10,0,0" VerticalAlignment="Top" Width="60" Click="btnDelete_Click"/>
     </Grid>
 </Window>

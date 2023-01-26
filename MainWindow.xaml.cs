@@ -26,10 +26,9 @@ namespace Duplicate_File_Scanner
     /// </summary>
     public partial class MainWindow : Window
     {
-        // list of files contains all files found in directory
-        private List<File> Files = new List<File>();
         // list of files contains all duplicate files found
-        private BindingList<File> duplicateFiles = new BindingList<File>();
+        private List<DuplicateFile> duplicateFiles = new List<DuplicateFile>();
+        IFileScanner fileScanner = new FileScanner();
 
         public MainWindow()
         {
@@ -40,7 +39,7 @@ namespace Duplicate_File_Scanner
         private void btnDirectory_Click(object sender, RoutedEventArgs e)
         {
             // opens directory window
-            WinForms.FolderBrowserDialog folderDialog = new WinForms.FolderBrowserDialog
+            FolderBrowserDialog folderDialog = new FolderBrowserDialog
             {
                 ShowNewFolderButton = false,
                 SelectedPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop)
@@ -60,132 +59,47 @@ namespace Duplicate_File_Scanner
         // scans directory for all files and compares the files
         private void btnScan_Click(object sender, RoutedEventArgs e)
         {
-            // clear from previus searches
-            duplicateFiles.Clear();
-           
-            // get all files from all sub folders
-            GetAllFiles();
-            
-            // scan found files for duplicates
-            CompareFiles();
-
-            // clear files list
-            Files.Clear();
-
-            // if no duplicate files found
-            if (duplicateFiles.Count == 0)
-            {
-                File.mainDirectory = "";
-                duplicateFiles.Add(new File("_No duplicate files found!",1));
-            }// end if
-
-            // data bind list of duplicates to lisbox
-            lsbFiles.ItemsSource = duplicateFiles;
+            UpdateView();
         }// end btnScan
-
-        // get all files from current and all subfolders
-        private void GetAllFiles()
-        {
-
-            File.mainDirectory = txbDirectory.Text;
-
-            // contain all file paths
-            List<string> files = new List<string>();
-            // contain all folders
-            List<string> folders = new List<string>();
-
-            // get all subfolder of current directory
-            folders.Add(File.mainDirectory);
-
-            // for each foler get all sub folder and add to folders
-            for (int i = 0; i < folders.Count; i++)
-            {
-                // get all subfolders
-                folders.AddRange(Directory.GetDirectories(folders[i]));
-                // get all files
-                files.AddRange(Directory.GetFiles(folders[i]));
-                
-            }
-            // add all files to List<Files>
-            foreach (var file in files)
-            {
-                Files.Add(new File(file));
-            }
-        }// end GetFiles()
-
-        // search for duplicate files
-        private void CompareFiles()
-        {
-            // for every file
-            for (int i = 0; i < Files.Count; i++)
-            {
-                // search for duplicates
-                for (int j = i + 1; j < Files.Count; j++)
-                {
-                    // if file not compared
-                    if (!duplicateFiles.Contains(Files[j]) && !duplicateFiles.Contains(Files[i]))
-                    {
-                        // if files are equal
-                        if (File.CompareFiles(Files[i], Files[j]))
-                        {
-                            // add to list of duplicates
-                            duplicateFiles.Add(Files[i]);
-                            duplicateFiles.Add(Files[j]);
-                        }// end if
-                    }// end if
-
-                }// end for
-            }// end for
-        }// end Compare Files
-
 
 
         private void btnDelete_Click(object sender, RoutedEventArgs e)
         {
             // if aggree to delete
-            if (!(System.Windows.MessageBox.Show("Delete selected files?", "Question", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No))
+            if (System.Windows.MessageBox.Show("Delete selected files?", "Question", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
             {
-                // get all selected items
-                var selected = lsbFiles.SelectedItems;
+                var selectedItems = DuplicateListView.SelectedItems.OfType<DuplicateFile>();
 
-                List<string> selectedFiles = new List<string>();
-
-                // for each selected item
-                foreach (var x in selected)
+                foreach (var file in selectedItems)
                 {
-                    selectedFiles.Add(File.mainDirectory + "\\" + x.ToString());
-                }// end foreach
+                    System.IO.File.Delete(file.FilePath);
+                }
 
-                // delete each file
-                foreach (var file in selectedFiles)
-                {
-                    System.IO.File.Delete(file);
-                }// end foreach
+                UpdateView();
+            }// end if
+        }
 
-                // clear from previus searches
+        private void UpdateView()
+        {
+            
+            if (duplicateFiles.Any())
+            {
                 duplicateFiles.Clear();
+            }
 
-                // get all files from all sub folders
-                GetAllFiles();
+            duplicateFiles = fileScanner.GetDuplicateFilesInDir(txbDirectory.Text);
 
-                // scan found files for duplicates
-                CompareFiles();
-
-                // clear files list
-                Files.Clear();
-
-                // if no duplicate files found
-                if (duplicateFiles.Count == 0)
-                {
-                    File.mainDirectory = "";
-                    duplicateFiles.Add(new File("_No duplicate files found!", 1));
-                }// end if
-
-                // data bind list of duplicates to lisbox
-                lsbFiles.ItemsSource = duplicateFiles;
-
+            // if no duplicate files found
+            if (duplicateFiles.Count == 0)
+            {
+                duplicateFiles.Add(new DuplicateFile() 
+                { 
+                    DuplicateGroup = "", FilePath = "_No duplicate files found!"
+                });
             }// end if
 
+            // data bind list of duplicates to lisbox
+            DuplicateListView.ItemsSource = duplicateFiles;
         }
     }
 }
