@@ -8,7 +8,7 @@ namespace Duplicate_File_Scanner
 {
     public interface IFileScanner
     {
-        Dictionary<string, List<string>> GroupDuplicateFiles(string[] filePaths);
+        Dictionary<int, List<string>> GroupDuplicateFiles(string[] filePaths);
 
         List<DuplicateFile> GetDuplicateFilesInDir(string path);
     }

@@ -24,7 +24,7 @@
                 </ListBox.ItemTemplate>
             </ListBox>-->
             <ListView  Margin="10,63,10,0" HorizontalContentAlignment="Stretch" x:Name="DuplicateListView" SelectionMode="Multiple">
-                <ListView.ItemContainerStyle>
+                <!--<ListView.ItemContainerStyle>
                     <Style TargetType="ListViewItem">
                         <Setter Property="Background" Value="Transparent"/>
                         <Style.Triggers>
@@ -36,7 +36,7 @@
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
-                </ListView.ItemContainerStyle>
+                </ListView.ItemContainerStyle>-->
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Header="Key" DisplayMemberBinding="{Binding GroupKey}" />

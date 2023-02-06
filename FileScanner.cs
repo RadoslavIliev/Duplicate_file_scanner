@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -11,12 +12,12 @@ namespace Duplicate_File_Scanner
     {
         public List<DuplicateFile> GetDuplicateFilesInDir(string path)
         {
-            var groupDuplicateFiles = new Dictionary<string, List<string>>();
+            var groupDuplicateFiles = new Dictionary<int, List<string>>();
             var files = Directory.GetFiles(path, "*.*", SearchOption.AllDirectories);
 
-            groupDuplicateFiles = GroupDuplicateFiles(files)
-                .Where(g => g.Value.Count() >= 2)
-                .ToDictionary(kvp => kvp.Key.Substring(0, 8) + "...", kvp => kvp.Value);
+            groupDuplicateFiles = GroupDuplicateFiles(files);
+            //groupDuplicateFiles = groupDuplicateFiles.Where(g => g.Value.Count() >= 2)
+            //    .ToDictionary(kvp => kvp.Key.Substring(0, 8) + "...", kvp => kvp.Value);
 
             List<DuplicateFile> duplicateFiles = new List<DuplicateFile>();
             for (int i = 0; i < groupDuplicateFiles.Count; i++)
@@ -27,7 +28,7 @@ namespace Duplicate_File_Scanner
                     duplicateFiles.Add(new DuplicateFile()
                     {
                         GroupKey = i,
-                        DuplicateGroup = key,
+                        DuplicateGroup = key.ToString(),
                         FilePath = file
                     });
                 }
@@ -39,34 +40,71 @@ namespace Duplicate_File_Scanner
             //    .ToList();
         }
 
-        public Dictionary<string, List<string>> GroupDuplicateFiles(string[] filePaths)
+        public Dictionary<int, List<string>> GroupDuplicateFiles(string[] filePaths)
         {
-            var fileGroups = new Dictionary<string, List<string>>();
+            var fileGroups = new Dictionary<long, List<string>>();
 
             foreach (string filePath in filePaths)
             {
-                // Compute the file's hash
-                byte[] fileHash;
-                using (var stream = System.IO.File.OpenRead(filePath))
-                {
-                    fileHash = ComputeHash(stream);
-                }
+                var fileInfo = new FileInfo(filePath);
+                var fileSize = fileInfo.Length;
 
-                // Convert the hash to a string
-                var hashString = BitConverter.ToString(fileHash);
-
-                // Add the file to the appropriate group
-                if (fileGroups.ContainsKey(hashString))
+                // Group the files by size
+                if (fileGroups.ContainsKey(fileSize))
                 {
-                    fileGroups[hashString].Add(filePath);
+                    fileGroups[fileSize].Add(filePath);
                 }
                 else
                 {
-                    fileGroups[hashString] = new List<string> { filePath };
+                    fileGroups[fileSize] = new List<string> { filePath };
                 }
             }
-            return fileGroups;
+
+            var duplicateFiles = new Dictionary<int, List<string>>();
+            var counter = 0;
+            foreach (var fileGroup in fileGroups.Values)
+            {
+                if (fileGroup.Count == 1)
+                {
+                    continue;
+                }
+
+                var fileHashes = new Dictionary<string, List<string>>();
+                foreach (string filePath in fileGroup)
+                {
+                    byte[] fileHash;
+                    using (var stream = System.IO.File.OpenRead(filePath))
+                    {
+                        fileHash = ComputeHash(stream);
+                    }
+
+                    // Convert the hash to a string
+                    var hashString = BitConverter.ToString(fileHash);
+
+                    // Add the file to the appropriate group
+                    if (fileHashes.ContainsKey(hashString))
+                    {
+                        fileHashes[hashString].Add(filePath);
+                    }
+                    else
+                    {
+                        fileHashes[hashString] = new List<string> { filePath };
+                    }
+                }
+
+                foreach (var duplicateFileGroup in fileHashes.Values)
+                {
+                    if (duplicateFileGroup.Count > 1)
+                    {
+                        duplicateFiles[counter] = duplicateFileGroup;
+                        counter++;
+                    }
+                }
+            }
+
+            return duplicateFiles;
         }
+
 
 
         private static byte[] ComputeHash(Stream stream)
